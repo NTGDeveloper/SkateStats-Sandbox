@@ -22,6 +22,7 @@ Because this is a standard PHP script, it will run on virtually any standard web
 2.  You will be greeted by a launch screen asking for a **JSON Feed URL**.
 3.  Paste the URL of any valid SkateStats JSON file (e.g., an `example.json` endpoint).
 4.  Click **Launch Dashboard**. The PHP script will parse the schema and generate the visual layout.
+
 **Tip:** You can also bypass the launch screen by appending the feed URL directly as a GET parameter: `[https://sandbox-skatestats.cgoldstein.xyz/?feed_url=https://path.to/your/skatestats.json](https://sandbox-skatestats.cgoldstein.xyz/?feed_url=https://path.to/your/skatestats.json)`
 ## Technology Stack
 -   **Backend / Routing:** PHP
