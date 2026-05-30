@@ -1,5 +1,5 @@
 # SkateStats Sandbox Web Dashboard
-A lightweight, modern PHP web frontend designed to consume and render [SkateStats]([url](https://github.com/NTGDeveloper/SkateStats)) JSON hockey feeds.
+A lightweight, modern PHP web frontend designed to consume and render [SkateStats](https://github.com/NTGDeveloper/SkateStats) JSON hockey feeds.
 Built with a focus on simplicity and scannability, this dashboard transforms raw JSON game data into a clean, professional interface similar to standard collegiate and professional sports statistics platforms.
 ## Features
 -   **Zero-Build Architecture:** No Node.js, npm, or complex build pipelines required. It runs on a single PHP file.
