@@ -36,6 +36,74 @@ function getPlayerDisplay($id, $players) {
     return "Unknown Player ($id)";
 }
 
+/**
+ * Dynamically generates a play-by-play narrative from raw event parameters.
+ */
+function generateNarrative($play, $players) {
+    $type = $play['Type'] ?? 'Unknown';
+    $teamId = $play['TeamId'] ?? '';
+    
+    // Parse Primary Player
+    $primaryPlayerInfo = $play['PrimaryPlayer'] ?? null;
+    $primaryName = 'Unknown Player';
+    if ($primaryPlayerInfo && isset($players[$primaryPlayerInfo['PlayerId']])) {
+        $p = $players[$primaryPlayerInfo['PlayerId']];
+        $primaryName = "{$p['LastName']}, {$p['FirstName']}";
+    }
+
+    // Parse Involved Players
+    $involved = $play['InvolvedPlayers'] ?? [];
+    
+    if ($type === 'Goal') {
+        $strength = strtoupper($play['Strength'] ?? 'EVEN STRENGTH');
+        $narrative = "Goal by {$teamId} {$primaryName} ({$strength})";
+        
+        $assists = [];
+        foreach ($involved as $inv) {
+            if (strpos(strtolower($inv['Role']), 'assist') !== false && isset($players[$inv['PlayerId']])) {
+                $p = $players[$inv['PlayerId']];
+                $assists[] = "{$p['LastName']}, {$p['FirstName']}";
+            }
+        }
+        
+        if (!empty($assists)) {
+            $narrative .= "; Assist by " . implode(", ", $assists);
+        }
+        return $narrative . ".";
+    } 
+    elseif ($type === 'Shot') {
+        $narrative = "Shot by {$teamId} {$primaryName} MISSED";
+        $goalieName = null;
+        
+        foreach ($involved as $inv) {
+            if (strtolower($inv['Role']) === 'goalie' && isset($players[$inv['PlayerId']])) {
+                $p = $players[$inv['PlayerId']];
+                $goalieName = "{$p['LastName']}, {$p['FirstName']}";
+                break;
+            }
+        }
+        
+        if ($goalieName) {
+            $narrative .= ", save {$goalieName}";
+        }
+        return $narrative . ".";
+    }
+    elseif ($type === 'Faceoff') {
+        $loserName = 'Unknown Player';
+        foreach ($involved as $inv) {
+            if (strtolower($inv['Role']) === 'loser' && isset($players[$inv['PlayerId']])) {
+                $p = $players[$inv['PlayerId']];
+                $loserName = "{$p['LastName']}, {$p['FirstName']}";
+                break;
+            }
+        }
+        return "Faceoff {$primaryName} vs {$loserName} won by {$teamId}.";
+    }
+    
+    // Fallback for other generic play types (Penalties, Hits, etc.)
+    return "{$type} by {$teamId} {$primaryName}.";
+}
+
 if ($isAjax && $error) {
     echo "<div class='p-4 text-red-600 font-bold text-center'>Error updating feed: " . htmlspecialchars($error) . "</div>";
     exit;
@@ -344,7 +412,7 @@ if ($isAjax && $error) {
                                             </span>
                                         </div>
                                         <p class="text-sm text-slate-700 leading-snug">
-                                            <?= htmlspecialchars($play['Narrative']) ?>
+                                            <?= htmlspecialchars(generateNarrative($play, $players)) ?>
                                         </p>
                                     </div>
                                 </div>
