@@ -57,6 +57,7 @@ function getPlayerDisplay($id, $players) {
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased">
 
+    <!-- Navbar -->
     <header class="bg-slate-900 text-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <h1 class="text-xl font-bold tracking-wider">SKATE<span class="text-blue-400">STATS</span></h1>
@@ -74,6 +75,7 @@ function getPlayerDisplay($id, $players) {
         <?php endif; ?>
 
         <?php if (!$data): ?>
+            <!-- Input Form State -->
             <div class="max-w-xl mx-auto mt-12 bg-white rounded-lg shadow-sm border border-slate-200 p-8">
                 <h2 class="text-2xl font-bold mb-2 text-center text-slate-800">Load Game Data</h2>
                 <p class="text-slate-500 text-center mb-6">Enter the URL of a valid SkateStats JSON feed to view the live dashboard.</p>
@@ -88,9 +90,26 @@ function getPlayerDisplay($id, $players) {
                         Launch Dashboard
                     </button>
                 </form>
+
+                <!-- Demo Feed Divider & Button -->
+                <div class="mt-6 relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-slate-200"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="bg-white px-2 text-slate-500">Or</span>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <a href="?feed_url=https://demo-skatestats.cgoldstein.xyz/" class="w-full flex justify-center bg-white text-slate-700 font-semibold py-2 px-4 border border-slate-300 rounded-md shadow-sm hover:bg-slate-50 transition duration-150">
+                        Load Demo Feed
+                    </a>
+                </div>
             </div>
 
         <?php else: ?>
+            <!-- Dashboard State -->
             <?php 
                 $game = $data['Game'];
                 $stats = $data['Stats'];
@@ -100,9 +119,11 @@ function getPlayerDisplay($id, $players) {
                 $away = $game['VisitingTeam'];
             ?>
 
+            <!-- Scoreboard Top Bar -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 mb-8 overflow-hidden">
                 <div class="grid grid-cols-3 items-center p-6 bg-gradient-to-b from-slate-50 to-white">
                     
+                    <!-- Visiting Team -->
                     <div class="flex flex-col items-center">
                         <?php if ($away['LogoUrl']): ?>
                             <img src="<?= htmlspecialchars($away['LogoUrl']) ?>" alt="<?= htmlspecialchars($away['Name']) ?>" class="h-20 w-20 object-contain mb-3">
@@ -113,6 +134,7 @@ function getPlayerDisplay($id, $players) {
                         <span class="text-slate-500 text-sm">(<?= htmlspecialchars($away['Record'] ?? '0-0-0') ?>)</span>
                     </div>
 
+                    <!-- Score & Clock -->
                     <div class="text-center flex flex-col justify-center border-x border-slate-100 px-4">
                         <div class="text-xs uppercase tracking-widest text-slate-400 font-semibold mb-2">
                             <?= htmlspecialchars($game['Location']) ?> &bull; <?= htmlspecialchars($game['Date']) ?>
@@ -132,6 +154,7 @@ function getPlayerDisplay($id, $players) {
                         </div>
                     </div>
 
+                    <!-- Home Team -->
                     <div class="flex flex-col items-center">
                         <?php if ($home['LogoUrl']): ?>
                             <img src="<?= htmlspecialchars($home['LogoUrl']) ?>" alt="<?= htmlspecialchars($home['Name']) ?>" class="h-20 w-20 object-contain mb-3">
@@ -144,10 +167,13 @@ function getPlayerDisplay($id, $players) {
                 </div>
             </div>
 
+            <!-- Two Column Layout for Stats & Plays -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
+                <!-- Left Column: Box Score & Stats (Takes 2/3 width) -->
                 <div class="lg:col-span-2 space-y-8">
                     
+                    <!-- Team Stats Comparison -->
                     <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                         <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Team Statistics</h3>
                         <table class="w-full text-sm text-center">
@@ -217,6 +243,7 @@ function getPlayerDisplay($id, $players) {
                                 </table>
                             </div>
 
+                            <!-- Goalies Section -->
                             <div class="bg-slate-50 px-4 py-2 border-y border-slate-200">
                                 <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Goaltenders</h4>
                             </div>
@@ -249,8 +276,10 @@ function getPlayerDisplay($id, $players) {
 
                 </div>
 
+                <!-- Right Column: Play-by-Play & Leaders (Takes 1/3 width) -->
                 <div class="space-y-8">
                     
+                    <!-- Game Leaders -->
                     <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                         <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Top Performers</h3>
                         <?php foreach (['Points', 'Goals'] as $leaderCat): ?>
@@ -282,6 +311,7 @@ function getPlayerDisplay($id, $players) {
                         <?php endforeach; ?>
                     </div>
 
+                    <!-- Play by Play -->
                     <div class="bg-white rounded-lg shadow-sm border border-slate-200 flex flex-col" style="max-height: 800px;">
                         <div class="p-4 border-b border-slate-200 bg-slate-50 rounded-t-lg">
                             <h3 class="text-lg font-bold text-slate-800">Play-By-Play</h3>
@@ -296,11 +326,13 @@ function getPlayerDisplay($id, $players) {
                                         <div class="p-4 hover:bg-slate-50 transition-colors flex gap-4 
                                             <?= $play['Type'] === 'Goal' ? 'bg-green-50/50' : '' ?>">
                                             
+                                            <!-- Time & Period -->
                                             <div class="flex-shrink-0 text-center w-12">
                                                 <div class="text-xs font-bold text-slate-800">P<?= $play['Period'] ?></div>
                                                 <div class="text-xs text-slate-500"><?= $play['ClockTime'] ?></div>
                                             </div>
                                             
+                                            <!-- Event details -->
                                             <div>
                                                 <div class="flex items-center gap-2 mb-1">
                                                     <span class="text-xs font-bold px-2 py-0.5 rounded 
