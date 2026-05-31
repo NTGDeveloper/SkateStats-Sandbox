@@ -71,7 +71,7 @@ if ($isAjax && $error) {
 
     <main class="max-w-7xl mx-auto px-4 py-8">
         
-        <?php if ($error && !$isAjax): ?>
+        <?php if ($error): ?>
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm" role="alert">
                 <p class="font-bold">Error</p>
                 <p><?= htmlspecialchars($error) ?></p>
@@ -131,7 +131,8 @@ if ($isAjax && $error) {
             </div>
 
             <div id="dashboardContainer">
-<?php endif; ?>
+        <?php endif; ?>
+<?php endif; // End of !$isAjax block ?>
 
 <?php if ($data): ?>
     <?php 
@@ -355,7 +356,7 @@ if ($isAjax && $error) {
 
         </div>
     </div>
-<?php endif; ?>
+<?php endif; // End of $data block ?>
 
 <?php if (!$isAjax): ?>
     <?php if ($data): ?>
@@ -393,4 +394,4 @@ if ($isAjax && $error) {
     <?php endif; ?>
 </body>
 </html>
-<?php endif; ?>
+<?php endif; // End of bottom !$isAjax block ?>
